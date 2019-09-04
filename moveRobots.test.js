@@ -1,4 +1,4 @@
-const moveRobots = require('./');
+const moveRobots = require('./moveRobots');
 
 describe('moveRobots', () => {
   it('should position the robots correctly', () => {
