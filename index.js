@@ -1,4 +1,4 @@
-const martianSimulator = require('./martianSimulator');
+const martianSimulator = require('./src/martianSimulator');
 
 (function main() {
   martianSimulator(
