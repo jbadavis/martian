@@ -1,19 +1,37 @@
 const makeMove = require('./makeMove');
 const isLost = require('./isLost');
 
-const moveRobots = (grid, robots) =>
-  robots.map(({position, instructions}) => {
+const moveRobots = (grid, robots) => {
+  const scents = [];
+
+  return robots.map(({position, instructions}) => {
     let lost = false;
 
-    instructions.forEach(instruction => {
-      position = makeMove(position, instruction);
+    const results = instructions
+      .map(instruction => {
+        const newPosition = makeMove(position, instruction, scents);
+        const scent = `${position[0]}${position[1]}`;
 
-      if (isLost(grid, position)) {
-        lost = true;
-      }
-    });
+        if (lost || (isLost(grid, newPosition) && !scents.includes(scent))) {
+          lost = true;
 
-    return {position, lost};
+          scents.push(scent);
+
+          return undefined;
+        }
+
+        if (isLost(grid, newPosition) && scents.includes(scent)) {
+          return position;
+        }
+
+        position = newPosition;
+
+        return newPosition;
+      })
+      .filter(position => position);
+
+    return {position: results[results.length - 1], lost};
   });
+};
 
 module.exports = moveRobots;
